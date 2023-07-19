@@ -1,24 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 const Home = () => {
+	const [posts, setPosts] = useState([])
+
+	const getPosts = async () => {
+		let url = 'https://jsonplaceholder.typicode.com/'
+		let resource = "posts"
+
+		const response = await fetch(url + resource)
+		const data = await response.json()
+
+		setPosts(data)
+
+		console.log(data)
+	}
+
+	useEffect(() => { 
+		getPosts()
+	},[])
+
 	return (
 		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+			{!posts && 'Loading...'}
+			{posts.length > 0 && posts.map((post,index) => {
+				return (
+					<h1 key={index}>{post.title}</h1>
+				)
+			})}
 		</div>
 	);
 };
